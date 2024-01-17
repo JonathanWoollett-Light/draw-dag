@@ -177,6 +177,7 @@ mod tests {
             OuterTestNode(NonNull::new(ptr).unwrap())
         }
     }
+    
     #[test]
     fn first() {
         let a = allocate(2, Vec::new());
