@@ -1,5 +1,6 @@
 #![feature(let_chains)]
 #![feature(iter_intersperse)]
+#![warn(clippy::pedantic)]
 
 use std::cmp::Ordering;
 use std::collections::BTreeMap;
@@ -7,6 +8,7 @@ use std::fmt::Display;
 use std::iter::repeat;
 use std::ops::Bound::{Excluded, Included};
 
+/// Trait to implement for nodes.
 pub trait Graph: Sized {
     fn next(&self) -> &[Self];
 }
@@ -32,6 +34,7 @@ impl PartialOrd for Coordinate {
     }
 }
 
+/// Draws the graph.
 pub fn draw_dag<T: Graph + Display + Copy>(node: T, width_spacing: usize) -> String {
     let mut column = 0;
 
@@ -67,7 +70,7 @@ pub fn draw_dag<T: Graph + Display + Copy>(node: T, width_spacing: usize) -> Str
     let mut output = String::new();
     let mut row = 0;
     let mut column = 0;
-    for (Coordinate { x, y }, node) in coordinates.iter() {
+    for (Coordinate { x, y }, node) in &coordinates {
         let row_diff = y - row;
         if row_diff > 0 {
             column = 0;
@@ -99,7 +102,7 @@ pub fn draw_dag<T: Graph + Display + Copy>(node: T, width_spacing: usize) -> Str
                     output.extend(repeat(' ').take(prev.x - last));
 
                     if let Some(second) = below_iter.peek() {
-                        assert!(second.y == first.y);
+                        debug_assert!(second.y == first.y);
 
                         output.push('├');
                         output.extend(repeat('─').take(second.x - first.x - 1));
